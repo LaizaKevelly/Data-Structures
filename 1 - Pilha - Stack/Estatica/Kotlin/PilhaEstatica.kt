@@ -1,18 +1,12 @@
 class PilhaEstatica : Empilhavel {
     private var ponteiroTopo: Int
-    private var dados: Array<Any?>
+    private var dados: Array<Any?> //Declara uma váriavel chamada dados que pode conter qualquer tipo de objeto (Any), incluindo null (?).
 
     constructor(tamanho : Int){
         dados = arrayOfNulls(tamanho)
         ponteiroTopo = -1
     }
 
-    override fun atualizar(dado: Any?) {
-        if (!estaVazia())
-            dados[ponteiroTopo] = dado
-        else
-            println("A Pilha está Vazia / Stack is Empty")
-    }
     override fun empilhar(dado: Any?) {
         if (!estaCheia()) {
             ponteiroTopo++
@@ -40,6 +34,14 @@ class PilhaEstatica : Empilhavel {
         }
         return dadoTopo
     }
+    override fun atualizar(dado: Any?) {
+        if (!estaVazia())
+            dados[ponteiroTopo] = dado
+        else
+            println("A Pilha está Vazia / Stack is Empty")
+    }
+
+    //--------------------------------------------------------------------
 
     override fun estaCheia(): Boolean{
         return(ponteiroTopo == dados.size - 1)
