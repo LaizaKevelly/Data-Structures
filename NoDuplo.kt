@@ -1,4 +1,4 @@
-data class NoDuplo (var dado: Any? = null){ //Data possui os métodos get/set
+data class NoDuplo(var dado: Any) { // Data ->
     var anterior: NoDuplo? = null
     var proximo: NoDuplo? = null
 }
