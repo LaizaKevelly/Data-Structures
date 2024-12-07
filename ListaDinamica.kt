@@ -1,154 +1,143 @@
-class ListaDinamica(val tamanho: Int): Listavel {
+class ListaDinamica(val tamanho: Int) : Listavel {
+    private var ponteiroInicio: NoDuplo? = null
+    private var ponteiroFim: NoDuplo? = null
     private var quantidade = 0
-    private var fim: NoDuplo? = null
-    private var inicio: NoDuplo? = null
 
     //PRINCIPAIS
     override fun inserir(dado: Any?, posicao: Int) {
-        var aux = inicio
-        if (!estaVazia()) {
-            if (posicao >= 0 && posicao < quantidade) {
+        var auxvaiqueprecisa = ponteiroInicio
+        if (!estaCheia()) {
+            if (posicao > 0 && posicao <= quantidade) {
                 for (i in 0 until posicao) {
-                    aux = aux?.proximo
+                    auxvaiqueprecisa = auxvaiqueprecisa?.proximo
                 }
-                val novoNo = NoDuplo(dado)
-                val prox = aux
+
+                var novoNo = NoDuplo(dado)
                 var ant: Any? = null
-                if (aux != null) {
-                    ant = aux.anterior
+                if (auxvaiqueprecisa != null) {
+                    ant = auxvaiqueprecisa.anterior
                 } else {
-                    ant = fim
+                    ant = ponteiroFim
                 }
-                //----------------------- Lógica
-                //ant?.proximo = novoNo
-                //prox?.anterior = novoNo
-                //novoNo.proximo = prox
+                var prox = auxvaiqueprecisa
+
                 //novoNo.anterior = ant
+                //ant.proximo = novoNo
+                //novoNo.proximo = prox
+                //prox.anterior = novoNo
+                //quantidade++
 
-
-                prox?.anterior = novoNo
-                novoNo.proximo = prox
-                novoNo.anterior = ant
 
                 if (ant != null) {
                     ant.proximo = novoNo
                 } else {
-                    inicio = novoNo
+                    ponteiroInicio = novoNo
                 }
-                //-----------------------
+                if (prox != null) {
+                    prox.anterior = novoNo
+                } else {
+                    ponteiroFim = novoNo
+                }
+                novoNo.anterior = ant
+                novoNo.proximo = prox
+
+                quantidade++
             } else {
-                throw IndexOutOfBoundsException ("")
+                throw IndexOutOfBoundsException ("Esse index aí n sei n hein")
             }
         } else {
-            throw NoSuchElementException("")
+            throw NoSuchElementException ("Não tem como, esta cheia :c")
         }
     }
     override fun anexar(dado: Any?) {
-        if(!estaCheia()) {
-            val noAux = NoDuplo(dado)
-            noAux.anterior = fim
-            fim?.proximo = noAux
-            fim = noAux
+        if (!estaCheia()) {
+            val novoNo = NoDuplo(dado);
+            ponteiroFim?.proximo = novoNo
+            novoNo.anterior = ponteiroFim
+            ponteiroFim = novoNo
             quantidade++
         }
-
     }
     override fun atualizar(dado: Any?, posicao: Int) {
         if (!estaVazia()) {
-            if (posicao >= 0 && posicao < quantidade) {
-                var aux = inicio
-                for (i in 0..posicao) {
-                    aux = aux?.proximo
-                }
-                aux?.dado = dado
-            } else
-                throw IndexOutOfBoundsException("")
-        } else {
-            throw NoSuchElementException("")
+            var auxvaiqueprecisa = ponteiroInicio
+            for (i in 0 until posicao) {
+                auxvaiqueprecisa = auxvaiqueprecisa?.proximo
+            }
+            auxvaiqueprecisa?.dado = dado
         }
     }
     override fun apagar(posicao: Int): Any? {
-        var temp: Any? = null
-        if(!estaVazia()) {
-            if (posicao < quantidade && posicao >= 0) {
-                var aux = inicio
-                for (i in 0 until posicao) {
-                    aux = aux?.proximo
-                }
-                temp = aux
-                val ant = aux?.anterior
-                val prox = aux?.proximo
-
-                //----------------------- Lógica
-                // ant.proximo = prox
-                // prox.anterior = ant
-                // quantidade--
-
-                if (ant != null) {
-                    ant.proximo = prox
-                } else
-                    inicio = inicio?.proximo
-                    quantidade--
-                if (prox != null) {
-                    prox.anterior = ant
-                } else
-                    fim = fim?.anterior
-                    quantidade--
-                //-----------------------
-            } else {
-                throw IndexOutOfBoundsException("")
+        var auxvaiqueprecisa = ponteiroInicio
+        if (!estaVazia()) {
+            for (i in 0 until posicao) {
+                auxvaiqueprecisa = auxvaiqueprecisa?.proximo
             }
-        } else {
-            throw NoSuchElementException("")
+            var ant = auxvaiqueprecisa?.anterior
+            var prox = auxvaiqueprecisa?.proximo
+
+            //--------------------
+            if (ant != null) {
+                ant.proximo = prox
+            } else {
+                ponteiroInicio = ponteiroInicio?.proximo
+            }
+            if (prox != null) {
+                prox.anterior = ant
+            } else {
+                ponteiroFim = ponteiroFim?.anterior
+            }
+            quantidade --
+            //--------------------
         }
-        return temp
+        return auxvaiqueprecisa?.dado
     }
-    override fun limpar() {}
+    override fun limpar() {
+        ponteiroInicio = null
+        ponteiroInicio = null
+        quantidade = 0
+    }
 
     override fun selecionar(posicao: Int): Any? {
-        var dadoTemp:Any? = null
+        //var dadoTemp:Any? = null
+        var resultado = ponteiroInicio
         if (!estaVazia()) {
-            if (posicao >= 0 && posicao < quantidade) {
-                var aux = inicio
-                for (i in 0 until posicao) {
-                    aux = aux?.proximo
-                }
-                dadoTemp = aux?.dado
+            for (i in 0 until posicao) {
+                resultado = resultado?.proximo
             }
+            //dadoTemp = aux?.dado
         }
-        return dadoTemp
+        return resultado?.dado //________________________________________________testar
     }
     override fun selecionarTodos(): Array<Any?> {
-        val arrayDados: Array<Any?> = arrayOfNulls(quantidade)
-        var aux = inicio
+        var auxvaiqueprecisa = ponteiroInicio
+        var resultado: Array<Any?> = arrayOfNulls(quantidade)
         if (!estaVazia()) {
-            for (i in 0 ..< quantidade) { // ..< = until (0 até 4)
-                arrayDados[i] = aux?.dado
-                aux = aux?.proximo
+            for (i in 0 until quantidade) {
+                resultado[i] = auxvaiqueprecisa?.dado
+                auxvaiqueprecisa = auxvaiqueprecisa?.proximo
             }
         }
-        return arrayDados
-    }
-    override fun ordenar() {
-
+        return resultado
     }
 
-    //AUXILIARES
+    //AUX
     override fun estaCheia(): Boolean {
         return tamanho == quantidade
     }
     override fun estaVazia(): Boolean {
-        return 0 == quantidade
+        return quantidade == 0
     }
     override fun imprimir(): String {
-        var aux = inicio
-        var resultado = "["
+        var auxvaiqueprecisa = ponteiroInicio
+        var resultado :String = "["
         for (i in 0 until quantidade) {
-            resultado += aux?.dado
-            if (i != quantidade-1) resultado += ","
-            aux = aux?.proximo
+            resultado += auxvaiqueprecisa?.dado
+            if (i != quantidade - 1) {
+                resultado += ","
+            }
+            auxvaiqueprecisa = auxvaiqueprecisa?.proximo
         }
         return "$resultado]"
     }
-
 }
