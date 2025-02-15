@@ -1,5 +1,3 @@
-package jav;
-
 public class Folha {
     private int valor;
 
